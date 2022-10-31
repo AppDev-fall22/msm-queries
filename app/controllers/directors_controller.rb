@@ -10,9 +10,16 @@ class DirectorsController < ApplicationController
     render({ :template => "director_template/eldest.html.erb"})
   end
 
+  def dumbest
+    @youngest = Director.where.not({:dob => nil}).order({ :dob=> :desc}).at(0)
+    render({ :template => "director_template/youngest.html.erb"})
+  end
+
   def director_details
     the_id = params.fetch("an_id")
-    @the_director = Director.all.where({ :id => the_id}).first
+
+    @the_director = Director.where({ :id => the_id}).at(0)
+    @filmography = Movie.where({ :director_id => @the_director.id})
 
     render({ :template => "director_template/show.html.erb"})
   end
